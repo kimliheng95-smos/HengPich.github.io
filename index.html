@@ -1,0 +1,623 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>A Surprise For You ❤️</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, "Khmer OS", "Noto Sans Khmer", sans-serif;
+      overflow: hidden;
+      background: #12000a;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* =====================================================
+       LANGUAGE TOGGLE BUTTON
+    ===================================================== */
+    .lang-toggle {
+      position: fixed;
+      top: 18px;
+      right: 18px;
+      z-index: 2000;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 30px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 0 15px rgba(255, 47, 117, 0.4);
+    }
+
+    .lang-toggle:hover {
+      background: rgba(255, 255, 255, 0.25);
+      transform: scale(1.05);
+    }
+
+    /* =====================================================
+       OPENING SCREEN
+    ===================================================== */
+    .opening {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 20px;
+      background: radial-gradient(circle at center, #ff4d88 0%, #8b0038 35%, #18000d 100%);
+      transition: 1.2s ease;
+    }
+
+    .opening.hide {
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(1.15);
+    }
+
+    .opening h1 {
+      color: white;
+      font-size: clamp(28px, 7vw, 70px);
+      text-align: center;
+      margin-bottom: 12px;
+      text-shadow: 0 0 10px #ff7aa8, 0 0 30px #ff2f75, 0 0 60px #ff2f75;
+      line-height: 1.2;
+    }
+
+    .opening p {
+      color: #ffe4ed;
+      font-size: clamp(15px, 4vw, 18px);
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .open-btn {
+      border: none;
+      padding: 16px 36px;
+      border-radius: 50px;
+      background: white;
+      color: #e60055;
+      font-size: clamp(16px, 4.5vw, 20px);
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 0 15px white, 0 0 40px #ff4d88;
+      transition: 0.3s;
+      min-height: 52px;
+    }
+
+    .open-btn:hover,
+    .open-btn:active {
+      transform: scale(1.06);
+      box-shadow: 0 0 25px white, 0 0 60px #ff4d88;
+    }
+
+    /* =====================================================
+       MAIN LOVE PAGE
+    ===================================================== */
+    .love-page {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden;
+      background: radial-gradient(circle at 50% 40%, #ff477e 0%, #8b0038 30%, #21000f 75%, #090005 100%);
+    }
+
+    .glow {
+      position: absolute;
+      width: min(500px, 90vw);
+      height: min(500px, 90vw);
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      background: rgba(255, 40, 110, 0.2);
+      filter: blur(80px);
+      animation: pulse 4s infinite alternate;
+      pointer-events: none;
+    }
+
+    @keyframes pulse {
+      from { transform: translate(-50%, -50%) scale(0.8); }
+      to   { transform: translate(-50%, -50%) scale(1.2); }
+    }
+
+    .message {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 20;
+      text-align: center;
+      width: min(90%, 650px);
+      padding: 0 12px;
+      color: white;
+    }
+
+    .center-photo {
+      width: clamp(80px, 22vw, 125px);
+      height: clamp(80px, 22vw, 125px);
+      margin: 0 auto 12px;
+      padding: 4px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ffffff, #ffb3ca, #ff2f75, #ffffff);
+      box-shadow: 0 0 15px rgba(255,255,255,0.8), 0 0 35px rgba(255,47,117,0.9), 0 0 70px rgba(255,47,117,0.6);
+      animation: centerPhotoFloat 3s ease-in-out infinite;
+      position: relative;
+      z-index: 25;
+    }
+
+    .center-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+      display: block;
+      border: 3px solid white;
+    }
+
+    @keyframes centerPhotoFloat {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50%      { transform: translateY(-8px) scale(1.04); }
+    }
+
+    .message > .heart {
+      font-size: clamp(42px, 10vw, 70px);
+      animation: heartbeat 1.5s infinite;
+      filter: drop-shadow(0 0 10px #ff8aaa) drop-shadow(0 0 30px #ff1764);
+      line-height: 1;
+    }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      50%      { transform: scale(1.18); }
+    }
+
+    .message h2 {
+      font-size: clamp(24px, 6vw, 58px);
+      margin: 8px 0;
+      text-shadow: 0 0 10px #ff8aaa, 0 0 30px #ff1764;
+      line-height: 1.25;
+    }
+
+    .message p {
+      font-size: clamp(13px, 3.5vw, 18px);
+      color: #ffe6ee;
+      line-height: 1.6;
+      max-width: 95%;
+      margin: 0 auto;
+    }
+
+    .couple {
+      margin-top: clamp(14px, 3vw, 24px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: clamp(10px, 3vw, 18px);
+      font-family: Georgia, serif;
+      flex-wrap: wrap;
+    }
+
+    .name {
+      font-size: clamp(18px, 4.5vw, 34px);
+      font-weight: bold;
+      color: #fff;
+      text-shadow: 0 0 8px rgba(255,255,255,0.5), 0 0 20px rgba(255,54,117,0.7);
+    }
+
+    .name.girl { color: #ffd4e3; }
+    .name.boy  { color: #dce8ff; }
+
+    .name-heart {
+      font-size: clamp(18px, 4vw, 27px);
+      animation: heartbeat 1.4s infinite;
+      filter: drop-shadow(0 0 8px #ff2f75) drop-shadow(0 0 18px #ff2f75);
+    }
+
+    .love-date {
+      margin-top: clamp(12px, 3vw, 16px);
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      padding: clamp(8px, 2.5vw, 12px) clamp(16px, 5vw, 25px);
+      border-top: 1px solid rgba(255,255,255,0.25);
+      border-bottom: 1px solid rgba(255,255,255,0.25);
+      background: rgba(255,255,255,0.04);
+      backdrop-filter: blur(8px);
+      border-radius: 5px;
+    }
+
+    .love-date .label {
+      font-size: clamp(9px, 2.5vw, 10px);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255,225,236,0.7);
+      margin-bottom: 4px;
+    }
+
+    .love-date .date {
+      font-family: Georgia, serif;
+      font-size: clamp(15px, 4vw, 19px);
+      color: #fff;
+      letter-spacing: 2px;
+      text-shadow: 0 0 8px #ff709c, 0 0 15px rgba(255,47,117,0.7);
+    }
+
+    .days-together {
+      margin-top: 10px;
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 6px;
+      color: #fff;
+    }
+
+    #daysCount {
+      font-family: Georgia, serif;
+      font-size: clamp(22px, 6vw, 30px);
+      font-weight: bold;
+      color: #ffd2df;
+      text-shadow: 0 0 8px #ff709c, 0 0 20px rgba(255,47,117,0.8);
+    }
+
+    #dayText {
+      font-size: clamp(9px, 2.5vw, 11px);
+      letter-spacing: 1.2px;
+      color: rgba(255,230,238,0.75);
+    }
+
+    .love-time {
+      margin-top: 6px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 4px;
+      font-family: Georgia, serif;
+      font-size: clamp(14px, 4vw, 18px);
+      color: #fff;
+      letter-spacing: 1px;
+      text-shadow: 0 0 8px #ff709c, 0 0 15px rgba(255,47,117,0.7);
+    }
+
+    .love-time span {
+      min-width: 22px;
+      text-align: center;
+    }
+
+    .love-time .separator {
+      color: #ff9fbb;
+      min-width: auto;
+    }
+
+    /* PHOTO GALLERY */
+    .photo {
+      position: absolute;
+      width: clamp(70px, 18vw, 150px);
+      height: clamp(90px, 23vw, 190px);
+      padding: clamp(4px, 1.2vw, 8px);
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 0 15px rgba(255,255,255,0.4), 0 0 35px rgba(255,30,100,0.6);
+      z-index: 10;
+      animation: floatingPhoto 5s ease-in-out infinite;
+    }
+
+    .photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+
+    .photo span {
+      position: absolute;
+      bottom: -26px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: white;
+      font-size: clamp(9px, 2.5vw, 14px);
+      white-space: nowrap;
+      text-shadow: 0 0 10px #ff2f75;
+    }
+
+    @keyframes floatingPhoto {
+      0%, 100% { transform: translateY(0) rotate(var(--rotate)); }
+      50%      { transform: translateY(-16px) rotate(var(--rotate)); }
+    }
+
+    .photo1 { top: 7%;  left: 6%;  --rotate: -10deg; animation-delay: 0s; }
+    .photo2 { top: 8%;  right: 6%; --rotate: 9deg;  animation-delay: 1s; }
+    .photo3 { bottom: 7%; left: 5%; --rotate: 8deg;  animation-delay: 2s; }
+    .photo4 { bottom: 7%; right: 5%; --rotate: -9deg; animation-delay: 1.5s; }
+    .photo5 { top: 26%; left: 16%; --rotate: -5deg; animation-delay: 0.8s; }
+    .photo6 { top: 26%; right: 16%; --rotate: 6deg;  animation-delay: 2.5s; }
+
+    .floating-heart {
+      position: absolute;
+      color: #ff6f9d;
+      font-size: 20px;
+      pointer-events: none;
+      animation: floatUp linear forwards;
+      filter: drop-shadow(0 0 6px #ff2f75) drop-shadow(0 0 15px #ff2f75);
+      z-index: 5;
+    }
+
+    @keyframes floatUp {
+      from {
+        transform: translateY(110vh) rotate(0deg) scale(0.5);
+        opacity: 0;
+      }
+      15% { opacity: 1; }
+      100% {
+        transform: translateY(-15vh) rotate(360deg) scale(1.5);
+        opacity: 0;
+      }
+    }
+
+    .small-heart {
+      position: absolute;
+      color: rgba(255,255,255,0.8);
+      animation: sparkle 2s infinite alternate;
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    @keyframes sparkle {
+      from { opacity: 0.2; transform: scale(0.7); }
+      to   { opacity: 1;   transform: scale(1.3); }
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .photo5, .photo6 { display: none; }
+      .photo1 { top: 6%; left: 4%; }
+      .photo2 { top: 6%; right: 4%; }
+      .photo3 { bottom: 6%; left: 4%; }
+      .photo4 { bottom: 6%; right: 4%; }
+    }
+
+    @media (max-width: 600px) {
+      .message { width: 88%; top: 48%; }
+      .center-photo { margin-bottom: 8px; }
+      .photo { width: 72px; height: 95px; padding: 4px; }
+      .photo span { font-size: 9px; bottom: -20px; }
+      .photo1 { top: 5%; left: 3%; }
+      .photo2 { top: 5%; right: 3%; }
+      .photo3 { bottom: 5%; left: 3%; }
+      .photo4 { bottom: 5%; right: 3%; }
+      .couple { gap: 8px; }
+      .love-date { padding: 8px 14px; }
+      .love-time span { min-width: 20px; }
+      .lang-toggle { top: 12px; right: 12px; padding: 6px 12px; font-size: 13px; }
+    }
+
+    @media (max-width: 380px) {
+      .message { width: 92%; }
+      .photo { width: 62px; height: 82px; }
+      .photo span { font-size: 8px; bottom: -18px; }
+      .photo1, .photo2 { top: 4%; }
+      .photo3, .photo4 { bottom: 4%; }
+    }
+
+    @media (max-height: 500px) and (orientation: landscape) {
+      .message {
+        top: 50%;
+        transform: translate(-50%, -50%) scale(0.85);
+      }
+      .photo5, .photo6 { display: none; }
+      .photo { width: 60px; height: 78px; }
+      .photo1 { top: 8%; left: 3%; }
+      .photo2 { top: 8%; right: 3%; }
+      .photo3 { bottom: 8%; left: 3%; }
+      .photo4 { bottom: 8%; right: 3%; }
+      .opening h1 { font-size: 28px; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- LANGUAGE TOGGLE -->
+  <button class="lang-toggle" id="langToggle" onclick="toggleLanguage()">
+    ខ្មែរ
+  </button>
+
+  <!-- OPENING SCREEN -->
+  <section class="opening" id="opening">
+    <h1 data-en="Something Special ❤️" data-km="អ្វីដែលពិសេស ❤️">Something Special ❤️</h1>
+    <p data-en="I made something just for you..." data-km="ខ្ញុំបានបង្កើតអ្វីមួយសម្រាប់អ្នក...">
+      I made something just for you...
+    </p>
+    <button class="open-btn" onclick="openSurprise()" data-en="Open My Surprise 💕" data-km="បើកការភ្ញាក់ផ្អើលរបស់ខ្ញុំ 💕">
+      Open My Surprise 💕
+    </button>
+  </section>
+
+  <!-- LOVE PAGE -->
+  <main class="love-page" id="lovePage">
+    <div class="glow"></div>
+
+    <div class="message">
+      <div class="center-photo">
+        <img src="photo_2026-08-22_20-56-45.jpg" alt="Our Special Photo" />
+      </div>
+
+      <div class="heart">❤️</div>
+
+      <h2 data-en="You Are My Favorite Person" data-km="អ្នកគឺជាមនុស្សដែលខ្ញុំស្រឡាញ់បំផុត">
+        You Are My Favorite Person
+      </h2>
+
+      <p data-en="Every photo holds a little memory, and every heart carries a little piece of how special you are to me. 💕"
+         data-km="រូបថតនីមួយៗផ្ទុកនូវការចងចាំតិចតួច ហើយបេះដូងនីមួយៗផ្ទុកនូវភាពពិសេសរបស់អ្នកចំពោះខ្ញុំ 💕">
+        Every photo holds a little memory,
+        and every heart carries a little
+        piece of how special you are to me. 💕
+      </p>
+
+      <div class="couple">
+        <div class="name girl">Dep Panhapich</div>
+        <div class="name-heart">❤️</div>
+        <div class="name boy">Kim Liheng</div>
+      </div>
+
+      <div class="love-date">
+        <div class="label" data-en="The day our story began" data-km="ថ្ងៃដែលរឿងរ៉ាវរបស់យើងចាប់ផ្តើម">
+          The day our story began
+        </div>
+        <div class="date">17 · 08 · 2026</div>
+
+        <div class="days-together">
+          <span id="daysCount">0</span>
+          <span id="dayText" data-en="Days Together ❤️" data-km="ថ្ងៃដែលនៅជាមួយគ្នា ❤️">
+            Days Together ❤️
+          </span>
+        </div>
+
+        <div class="love-time">
+          <span id="hours">00</span>
+          <span class="separator">:</span>
+          <span id="minutes">00</span>
+          <span class="separator">:</span>
+          <span id="seconds">00</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- PHOTOS -->
+    <div class="photo photo1">
+      <img src="1.jpg" alt="Our memory" />
+      <span data-en="Our Memory ❤️" data-km="ការចងចាំរបស់យើង ❤️">Our Memory ❤️</span>
+    </div>
+
+    <div class="photo photo2">
+      <img src="2.jpg" alt="Our memory" />
+      <span data-en="Beautiful Moment 💕" data-km="ពេលវេលាស្អាត 💕">Beautiful Moment 💕</span>
+    </div>
+
+    <div class="photo photo3">
+      <img src="3.jpg" alt="Our memory" />
+      <span data-en="Always Smile ❤️" data-km="ញញឹមជានិច្ច ❤️">Always Smile ❤️</span>
+    </div>
+
+    <div class="photo photo4">
+      <img src="4.jpg" alt="Our memory" />
+      <span data-en="My Favorite 💗" data-km="សំណព្វរបស់ខ្ញុំ 💗">My Favorite 💗</span>
+    </div>
+
+    <div class="photo photo5">
+      <img src="5.jpg" alt="Our memory" />
+      <span data-en="Sweet Memory 💕" data-km="ការចងចាំផ្អែម 💕">Sweet Memory 💕</span>
+    </div>
+
+    <div class="photo photo6">
+      <img src="photo_2026-08-22_20-32-00.jpg" alt="Our memory" />
+      <span data-en="Forever ❤️" data-km="រហូត ❤️">Forever ❤️</span>
+    </div>
+  </main>
+
+  <script>
+    let currentLang = "en"; // default English
+
+    function toggleLanguage() {
+      currentLang = currentLang === "en" ? "km" : "en";
+
+      // Update button text
+      document.getElementById("langToggle").textContent =
+        currentLang === "en" ? "ខ្មែរ" : "English";
+
+      // Update all elements that have data-en / data-km
+      document.querySelectorAll("[data-en]").forEach(el => {
+        el.textContent = el.getAttribute(`data-${currentLang}`);
+      });
+
+      // Update day text specially (because of singular/plural)
+      updateLoveTime();
+    }
+
+    function openSurprise() {
+      const opening = document.getElementById("opening");
+      opening.classList.add("hide");
+      startHearts();
+    }
+
+    function createHeart() {
+      const heart = document.createElement("div");
+      heart.classList.add("floating-heart");
+
+      const hearts = ["❤️", "💗", "💕", "💖", "💘", "💝", "💓"];
+      heart.innerHTML = hearts[Math.floor(Math.random() * hearts.length)];
+
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.fontSize = 15 + Math.random() * 35 + "px";
+
+      const duration = 5 + Math.random() * 7;
+      heart.style.animationDuration = duration + "s";
+
+      document.getElementById("lovePage").appendChild(heart);
+
+      setTimeout(() => heart.remove(), duration * 1000);
+    }
+
+    function startHearts() {
+      setInterval(createHeart, 350);
+    }
+
+    // Little sparkle hearts
+    const lovePage = document.getElementById("lovePage");
+    for (let i = 0; i < 25; i++) {
+      const heart = document.createElement("div");
+      heart.classList.add("small-heart");
+      heart.innerHTML = "♥";
+      heart.style.left = Math.random() * 100 + "%";
+      heart.style.top = Math.random() * 100 + "%";
+      heart.style.fontSize = 8 + Math.random() * 18 + "px";
+      heart.style.animationDelay = Math.random() * 2 + "s";
+      lovePage.appendChild(heart);
+    }
+
+    // Love counter
+    function updateLoveTime() {
+      const loveStart = new Date(2026, 7, 17);
+      const now = new Date();
+
+      let difference = now.getTime() - loveStart.getTime();
+      if (difference < 0) difference = 0;
+
+      const totalSeconds = Math.floor(difference / 1000);
+      const days = Math.floor(totalSeconds / (24 * 60 * 60));
+      const hours = Math.floor((totalSeconds % (24 * 60 * 60)) / (60 * 60));
+      const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
+      const seconds = totalSeconds % 60;
+
+      document.getElementById("daysCount").textContent = days;
+
+      const dayText = document.getElementById("dayText");
+      if (currentLang === "km") {
+        dayText.textContent = "ថ្ងៃដែលនៅជាមួយគ្នា ❤️";
+      } else {
+        dayText.textContent = days === 1 ? "Day Together ❤️" : "Days Together ❤️";
+      }
+
+      document.getElementById("hours").textContent = String(hours).padStart(2, "0");
+      document.getElementById("minutes").textContent = String(minutes).padStart(2, "0");
+      document.getElementById("seconds").textContent = String(seconds).padStart(2, "0");
+    }
+
+    updateLoveTime();
+    setInterval(updateLoveTime, 1000);
+  </script>
+</body>
+</html>
